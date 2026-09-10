@@ -1,13 +1,44 @@
 #include "uf.h"
 
+#include <assert.h>
 #include <stdlib.h>
 
 struct UnionFind* uf_create(int n) {
-  (void)n;
-  return NULL;
+  assert(n > 0);  // n<=0だと予期しない動作になる。エッジケース対策
+  struct UnionFind* uf = malloc(sizeof(
+      *uf));  // sizeof(StructUnionFind)を入れてたけど*ufを入れれば型変更対策になる
+  if (uf == NULL) {
+    return NULL;  // mallocは失敗したら基本NULLを返すのでこの処理でOK
+                  // Linuxはメモリオーバーでも仮想メモリを確保するためNULLをあまり返さないらしいが、チェックは必要
+  }
+  uf->parent = malloc(n * sizeof(*uf->parent));
+  if (uf->parent == NULL) {
+    free(uf);
+    return NULL;
+  }
+  uf->rank = malloc(n * sizeof(*uf->rank));
+  if (uf->rank == NULL) {
+    free(uf->parent);
+    free(uf);
+    return NULL;
+  }
+  uf->n = n;
+
+  for (int i = 0; i < n; i++) {
+    uf->parent[i] = i;
+    uf->rank[i] = 0;
+  }
+
+  return uf;
 }
 
-void uf_destroy(struct UnionFind* uf) { (void)uf; }
+void uf_destroy(struct UnionFind* uf) {
+  if (uf == NULL)
+    return;  // free(NULL)はOKだがNULL->parentはエラーになるので先に判定
+  free(uf->parent);
+  free(uf->rank);
+  free(uf);
+}
 
 int uf_find(struct UnionFind* uf, int x) {
   (void)uf;
