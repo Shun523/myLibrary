@@ -1,0 +1,7 @@
+# Internal planning / spec docs (not part of the published library)
+docs/
+
+# Build artifacts
+test
+test_asan
+*.o
