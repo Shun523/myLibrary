@@ -54,8 +54,10 @@ void uf_unite(struct UnionFind* uf, int x, int y) {
   int ry = uf_find(
       uf, y);  // UnionFindでは接続判定ができればよいので根だけ見て効率化
   if (rx == ry) return;
+  // サイズの大きい木の根にもう一方をつけるとrank(高さ上限)はつけかえるだけ
+  // rankが同じなら根っこの1ノード分木全体のrankが大きくなる
   if (uf->rank[rx] > uf->rank[ry]) {
-    uf->parent[ry] = rx;
+    uf->parent[ry] = rx;  // 初期実装はparent[y]に代入してバグらせていた
   } else if (uf->rank[rx] == uf->rank[ry]) {
     uf->parent[ry] = rx;
     uf->rank[rx]++;
