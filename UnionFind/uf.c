@@ -48,14 +48,23 @@ int uf_find(struct UnionFind* uf, int x) {
 }
 
 void uf_unite(struct UnionFind* uf, int x, int y) {
-  (void)uf;
-  (void)x;
-  (void)y;
+  assert(uf != NULL);
+  assert(x >= 0 && x < uf->n && y >= 0 && y < uf->n);
+  int rx = uf_find(uf, x);
+  int ry = uf_find(
+      uf, y);  // UnionFindでは接続判定ができればよいので根だけ見て効率化
+  if (rx == ry) return;
+  if (uf->rank[rx] > uf->rank[ry]) {
+    uf->parent[ry] = rx;
+  } else if (uf->rank[rx] == uf->rank[ry]) {
+    uf->parent[ry] = rx;
+    uf->rank[rx]++;
+  } else {
+    uf->parent[rx] = ry;
+  }
 }
 
 int uf_same(struct UnionFind* uf, int x, int y) {
-  (void)uf;
-  (void)x;
-  (void)y;
+  if (uf_find(uf, x) == uf_find(uf, y)) return 1;
   return 0;
 }
