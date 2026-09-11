@@ -41,10 +41,10 @@ void uf_destroy(struct UnionFind* uf) {
 }
 
 int uf_find(struct UnionFind* uf, int x) {
-  assert(uf!=NULL);
-  assert(x>=0&&x<=uf->n);
-  if(uf->parent[x]==x)return x;
-  return uf->parent[x]=uf_find(uf,uf->parent[x]); //再帰処理でコンパクトに
+  assert(uf != NULL);
+  assert(x >= 0 && x < uf->n);
+  if (uf->parent[x] == x) return x;
+  return uf->parent[x] = uf_find(uf, uf->parent[x]);  // 再帰処理でコンパクトに
 }
 
 void uf_unite(struct UnionFind* uf, int x, int y) {
